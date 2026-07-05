@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  fullName String
+  email    String @unique
+  phone    String @unique
+  password String
+
+  dateOfBirth  DateTime?
+  address      String?
+  profileImage String?
+  bloodGroup       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pregnancy PregnancyRecord?
+
+  hydrations HydrationRecord[]
+
+  weights WeightRecord[]
+
+  appointments Appointment[]
+
+  orders Order[]
+
+  notifications Notification[]
+}
+
+model PregnancyRecord {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  currentWeek      Int
+  dueDate          DateTime
+  emergencyContact String?
+  doctorName       String?
+  hospital         String?
+  user             User     @relation(fields: [userId], references: [id])
+}
+
+model Doctor {
+  id            String        @id @default(uuid())
+  name          String
+  speciality    String
+  qualification String
+  hospital      String
+  experience    String
+  fee           Float
+  image         String
+  rating        Float
+  about         String
+  appointments  Appointment[]
+}
+
+model MidWife {
+  id            String        @id @default(uuid())
+  name          String
+  qualification String
+  experience    String
+  image         String
+  fee           Float
+  rating        Float
+  about         String
+  availability  String
+  appointments  Appointment[]
+}
+
+model Appointment {
+  id        String            @id @default(uuid())
+  userId    String
+  doctorId  String?
+  midwifeId String?
+  date      DateTime
+  type      AppointmentType
+  status    AppointmentStatus @default(PENDING)
+  notes     String?
+  createdAt DateTime          @default(now())
+  user      User              @relation(fields: [userId], references: [id])
+  doctor    Doctor?           @relation(fields: [doctorId], references: [id])
+  midwife   MidWife?          @relation(fields: [midwifeId], references: [id])
+}
+
+model HydrationRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model WeightRecord {
+  id         String   @id @default(uuid())
+  userId     String
+  weight     Float
+  recordedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Exercise {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  trimester   String
+  youtubeUrl  String
+  thumbnail   String
+  duration    String
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  image       String
+  category    String
+  price       Float
+  stock       Int
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  total           Float
+  status          OrderStatus @default(PENDING)
+  createdAt       DateTime    @default(now())
+  user            User        @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  deliveryAddress String?
+  phoneNumber     String?
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  subtotal  Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum AppointmentType {
+  DOCTOR
+  MIDWIFE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
