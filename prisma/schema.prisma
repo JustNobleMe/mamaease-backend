@@ -59,8 +59,8 @@ model Doctor {
   hospital      String
   experience    String
   fee           Float
-  image         String
-  rating        Float
+  image         String @default('')
+  rating        Float @default(0.0)
   about         String
   appointments  Appointment[]
 }

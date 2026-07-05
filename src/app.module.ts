@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { DoctorsModule } from './doctors/doctors.module';
 import { MidwivesModule } from './midwives/midwives.module';
 import { AppointmentsModule } from './appointments/appointments.module';
