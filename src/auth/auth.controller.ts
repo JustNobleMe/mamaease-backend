@@ -17,7 +17,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -38,6 +37,7 @@ export class AuthController {
         return this.authService.login(dto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('me')
     me(@Req() req) {
         return this.authService.validateUser(req.user.id);

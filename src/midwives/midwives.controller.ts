@@ -1,15 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
+  Delete, 
+  UseGuards
+} from '@nestjs/common';
+
 import { MidwivesService } from './midwives.service';
 import { CreateMidwifeDto } from './dto/create-midwife.dto';
 import { UpdateMidwifeDto } from './dto/update-midwife.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('midwives')
 export class MidwivesController {
   constructor(private readonly midwivesService: MidwivesService) {}
 
   @Post()
-  create(@Body() createMidwifeDto: CreateMidwifeDto) {
-    return this.midwivesService.create(createMidwifeDto);
+  create(@Body() dto: CreateMidwifeDto) {
+    return this.midwivesService.create(dto);
   }
 
   @Get()
@@ -19,16 +33,16 @@ export class MidwivesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.midwivesService.findOne(+id);
+    return this.midwivesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMidwifeDto: UpdateMidwifeDto) {
-    return this.midwivesService.update(+id, updateMidwifeDto);
+  update(@Param('id') id: string, @Body() dto: UpdateMidwifeDto) {
+    return this.midwivesService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.midwivesService.remove(+id);
+    return this.midwivesService.remove(id);
   }
 }
