@@ -43,6 +43,7 @@ model User {
 model PregnancyRecord {
   id               String   @id @default(uuid())
   userId           String   @unique
+  bloodGroup       String?
   currentWeek      Int
   dueDate          DateTime
   emergencyContact String?
@@ -59,7 +60,7 @@ model Doctor {
   hospital      String
   experience    String
   fee           Float
-  image         String @default('')
+  image         String
   rating        Float @default(0.0)
   about         String
   appointments  Appointment[]

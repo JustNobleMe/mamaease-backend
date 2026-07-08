@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Request,
+  UseGuards
+} from '@nestjs/common';
+
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+
 import { PregnancyService } from './pregnancy.service';
+
 import { CreatePregnancyDto } from './dto/create-pregnancy.dto';
 import { UpdatePregnancyDto } from './dto/update-pregnancy.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('pregnancy')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class PregnancyController {
   constructor(private readonly pregnancyService: PregnancyService) {}
 
   @Post()
-  create(@Body() createPregnancyDto: CreatePregnancyDto) {
-    return this.pregnancyService.create(createPregnancyDto);
+  create(
+    @Request() req,
+    @Body() dto: CreatePregnancyDto) {
+    return this.pregnancyService.create(
+      req.user.id,
+      dto,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.pregnancyService.findAll();
+  get(@Request() req) {
+    return this.pregnancyService.get(
+      req.user.id,
+    );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pregnancyService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePregnancyDto: UpdatePregnancyDto) {
-    return this.pregnancyService.update(+id, updatePregnancyDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pregnancyService.remove(+id);
+  @Patch()
+  update(
+    @Request() req,
+    @Body() dto: UpdatePregnancyDto,
+  ) {
+    return this.pregnancyService.update(
+      req.user.id,
+      dto,
+    );
   }
 }
