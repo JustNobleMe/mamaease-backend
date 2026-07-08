@@ -1,34 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller,
+  Get, 
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Request,
+  UseGuards
+} from '@nestjs/common';
+
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { UpdateAppointmentStatusDto } from './dto/update-status.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('appointments')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentsService.create(createAppointmentDto);
+  create(
+    @Request() req,
+    @Body() dto: CreateAppointmentDto) {
+    return this.appointmentsService.create(
+      req.user.id,
+      dto,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
+  findAll(
+    @Request() req
+  ) {
+    return this.appointmentsService.findAll(
+      req.user.id,
+    );
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
+    return this.appointmentsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
+  @Patch(':id/status')
+  updateStatus(@Param('id') id: string, @Body() statusDto: UpdateAppointmentStatusDto) {
+    return this.appointmentsService.update(id, statusDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
+    return this.appointmentsService.remove(id);
   }
 }
