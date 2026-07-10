@@ -16,6 +16,7 @@ import { OrdersModule } from './orders/orders.module';
 import { ExercisesModule } from './exercises/exercises.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ProfileModule } from './profile/profile.module';
+import { HydrationModule } from './hydration/hydration.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ProfileModule } from './profile/profile.module';
       isGlobal: true,
     }),
     PrismaModule,
-    AuthModule, UsersModule, DoctorsModule, MidwivesModule, AppointmentsModule, PregnancyModule, MarketplaceModule, OrdersModule, ExercisesModule, NotificationsModule, ProfileModule
+    AuthModule, UsersModule, DoctorsModule, MidwivesModule, AppointmentsModule, PregnancyModule, MarketplaceModule, OrdersModule, ExercisesModule, NotificationsModule, ProfileModule, HydrationModule
   ],
   controllers: [AppController],
   providers: [AppService],
