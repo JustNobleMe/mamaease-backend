@@ -12,9 +12,11 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://localhost:8080',
-      'https://curly-giggle-7xgw7xq4r5gfrw6v-8080.app.github.dev/',
+      'https://curly-giggle-7xgw7xq4r5gfrw6v-8080.app.github.dev',
     ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   });
 
   app.setGlobalPrefix('api');
