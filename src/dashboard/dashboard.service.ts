@@ -13,7 +13,7 @@ export class DashboardService {
     async getDashboard(userId: string) {
         //User
         const user = await this.prisma.user.findUnique({
-            where: { id: userId },
+            where: { id: userId, },
             select: {
                 fullName: true,
                 profileImage: true,

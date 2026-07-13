@@ -8,9 +8,9 @@ import { DashboardService } from './dashboard.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class DashboardController {
     constructor(
         private readonly dashboardService: DashboardService,
@@ -18,8 +18,9 @@ export class DashboardController {
 
     @Get()
     async getDashboard(@Request() req) {
+        console.log(req.user);
         return this.dashboardService.getDashboard(
-            req.user.userId,
+            req.user.id,
         );
     }
 }
