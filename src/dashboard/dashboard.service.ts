@@ -30,7 +30,11 @@ export class DashboardService {
                 userId,
             },
         });
-        let pregnancyData = {};
+        let pregnancyData: {
+            currentWeek: number;
+            progress: number;
+            dueDate: string;
+        } | null = null;
 
         if (pregnancy) {
             const progress = Math.round((pregnancy.currentWeek / 40) * 100);
@@ -62,7 +66,12 @@ export class DashboardService {
             },
         });
 
-        let appointmentData = {};
+        let appointmentData: {
+            name: string | undefined;
+            type: string;
+            date: string;
+            time: string;
+        } | null = null;
 
         if (appointment) {
             const isDoctor = appointment.type === 'DOCTOR';
